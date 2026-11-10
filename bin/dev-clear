@@ -1,0 +1,10 @@
+#!/bin/sh
+
+cd /var/www/App
+
+composer dump-autoload
+
+rm -rf /var/www/environment/cache/*
+rm -rf /var/www/App/var/cache/*
+
+winglet routes:build

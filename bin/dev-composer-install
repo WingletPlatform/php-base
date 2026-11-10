@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Use this with winglet local mount
+
+set -e
+
+cd /var/www/App
+
+# generate dev composer with path repo
+#php -r '
+#$base=json_decode(file_get_contents("composer.json"),true);
+#$base["repositories"]=$base["repositories"]??[];
+#array_unshift($base["repositories"],[
+#  "type"=>"path",
+#  "url"=>"/var/www/Winglet",
+#  "options"=>["symlink"=>true]
+#]);
+#file_put_contents("composer.dev.json", json_encode($base, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+#'
+
+#COMPOSER=composer.dev.json composer install
+echo "Ajettiin vaikkei pitäisi!"

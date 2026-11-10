@@ -1,0 +1,24 @@
+#!/bin/sh
+set -eu
+
+umask 0002
+
+RUNTIME_DIRS="
+/var/www/cache
+/var/www/logs
+/var/www/var
+/var/www/var/cache
+/var/www/var/cache/doctrine
+/var/www/var/doctrine
+/var/www/var/doctrine/proxies
+"
+
+for dir in $RUNTIME_DIRS; do
+    install -d -o www-data -g www-data -m 2775 "$dir"
+done
+
+# Normalize existing permissions as well so files created via HTTP, cron, or CLI
+# remain editable through the other execution paths.
+chown -R www-data:www-data /var/www/cache /var/www/logs /var/www/var
+find /var/www/cache /var/www/logs /var/www/var -type d -exec chmod 2775 {} \;
+find /var/www/cache /var/www/logs /var/www/var -type f -exec chmod 0664 {} \; || true

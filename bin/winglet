@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+
+umask 0002
+/usr/local/bin/setup-runtime-dirs
+
+exec php /var/www/App/vendor/winglet/core/bin/console "$@"

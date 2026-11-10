@@ -1,0 +1,9 @@
+*.sh text eol=lf
+
+bin/start-services text eol=lf
+bin/dev-start-services text eol=lf
+bin/setup-runtime-dirs text eol=lf
+bin/dev-composer-install text eol=lf
+bin/dev-clear text eol=lf
+bin/winglet text eol=lf
+bin/winglet-doctrine text eol=lf

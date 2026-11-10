@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+umask 0002
+
+/usr/local/bin/setup-runtime-dirs
+
+/usr/sbin/cron -f -l 8 &
+exec apache2-foreground

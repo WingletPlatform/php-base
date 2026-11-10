@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+
+umask 0002
+
+echo "Install Composer packages..."
+cd /var/www/App
+composer install
+
+#/usr/local/bin/dev-composer-install
+
+cd /var/www
+
+/usr/local/bin/setup-runtime-dirs
+
+echo "Building controllers and routes..."
+/usr/local/bin/winglet routes:build
+
+echo "Starting crontab and apache2"
+/usr/sbin/cron -f -l 8 &
+exec apache2-foreground
