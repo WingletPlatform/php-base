@@ -81,7 +81,7 @@ current_step='preparing disposable fixture'
 on_exit() {
     status=$?
     if [[ "$status" -ne 0 ]]; then
-        printf '{"status":"failed","exit_code":%s,"failed_step":"%s","minimum_php":"8.5.12","image":"%s"}\n' \
+        printf '{"status":"failed","exit_code":%s,"failed_step":"%s","minimum_php":"8.5.13","image":"%s"}\n' \
             "$status" "$current_step" "$image" > "$SUMMARY_FILE"
     fi
     cleanup
@@ -126,7 +126,7 @@ echo 'winglet-php85-http-error-ok';
 PHP
 chmod 0644 "$fixture_dir/__verify_php85.php" "$fixture_dir/__verify_php85_error.php"
 
-printf '{"status":"running","minimum_php":"8.5.12","image":"%s"}\n' "$image" > "$SUMMARY_FILE"
+printf '{"status":"running","minimum_php":"8.5.13","image":"%s"}\n' "$image" > "$SUMMARY_FILE"
 if docker image inspect "$image" >/dev/null 2>&1; then
     printf 'Refusing to replace pre-existing or external image: %s\n' "$image" >&2
     exit 1
@@ -141,7 +141,7 @@ echo '==> Check PHP runtime and required extensions'
 docker run --rm "$image" php -v
 docker run --rm "$image" php -r '
 $required = ["pdo_mysql", "fileinfo", "gd", "zip", "apcu"];
-if (version_compare(PHP_VERSION, "8.5.12", "<")) { fwrite(STDERR, sprintf("Expected PHP >= 8.5.12, got %s\n", PHP_VERSION)); exit(1); }
+if (version_compare(PHP_VERSION, "8.5.13", "<")) { fwrite(STDERR, sprintf("Expected PHP >= 8.5.13, got %s\n", PHP_VERSION)); exit(1); }
 foreach ($required as $extension) {
     if (!extension_loaded($extension)) { fwrite(STDERR, sprintf("Missing PHP extension: %s\n", $extension)); exit(1); }
 }
@@ -201,8 +201,8 @@ docker cp "$fixture_dir/__verify_php85.php" "$container:/var/www/html/__verify_p
 docker cp "$fixture_dir/__verify_php85_error.php" "$container:/var/www/html/__verify_php85_error.php"
 docker start "$container" >/dev/null
 cli_php_version="$(docker exec "$container" php -r 'echo PHP_VERSION;')"
-if ! docker exec "$container" php -r 'exit(version_compare(PHP_VERSION, "8.5.12", "<") ? 1 : 0);'; then
-    printf 'CLI PHP must be >= 8.5.12; actual version: %s\n' "$cli_php_version" >&2
+if ! docker exec "$container" php -r 'exit(version_compare(PHP_VERSION, "8.5.13", "<") ? 1 : 0);'; then
+    printf 'CLI PHP must be >= 8.5.13; actual version: %s\n' "$cli_php_version" >&2
     exit 1
 fi
 printf 'Container CLI PHP version: %s\n' "$cli_php_version"
@@ -385,5 +385,5 @@ if [[ -n "$save_image" ]]; then
     docker save --output "$save_image" "$image"
 fi
 current_step='complete'
-printf '{"status":"passed","minimum_php":"8.5.12","platform":"linux/amd64","image":"%s","checks":["cli-and-apache-php-version-match","php-version-minimum","extensions","php-ini-hardening","production-display-and-log-errors","php-memory-and-backtrace-settings-reported","image-identities-and-available-digests-reported","container-memory-constraint-reported","composer-version","apache-config","apache-http-readiness","php-fixture-http-200","controlled-http-500-and-follow-up-request","apache-security-headers","cron-startup","runtime-fixture-ownership-and-modes","runtime-dir-idempotence","container-graceful-stop"]}\n' "$image" > "$SUMMARY_FILE"
+printf '{"status":"passed","minimum_php":"8.5.13","platform":"linux/amd64","image":"%s","checks":["cli-and-apache-php-version-match","php-version-minimum","extensions","php-ini-hardening","production-display-and-log-errors","php-memory-and-backtrace-settings-reported","image-identities-and-available-digests-reported","container-memory-constraint-reported","composer-version","apache-config","apache-http-readiness","php-fixture-http-200","controlled-http-500-and-follow-up-request","apache-security-headers","cron-startup","runtime-fixture-ownership-and-modes","runtime-dir-idempotence","container-graceful-stop"]}\n' "$image" > "$SUMMARY_FILE"
 echo "Verification passed. Log: $LOG_FILE; summary: $SUMMARY_FILE"
